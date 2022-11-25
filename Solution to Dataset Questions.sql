@@ -122,12 +122,11 @@ GROUP BY co.region
 ORDER BY no_of_startups DESC;
 
 /*4. STARTUP WITH THE MOST FUNDING ROUND*/
-SELECT TOP 1 ob.name, ob.funding_rounds, CONCAT(po.last_name, ' ', po.first_name) AS founders_name, re.title, de.institution
-FROM people po
-INNER JOIN degrees de
-ON po.object_id = de.object_id
-INNER JOIN relationships re
-ON de.object_id = re.person_object_id
-INNER JOIN objects ob
-ON re.relationship_object_id = ob.object_id
+SELECT ob.name AS startup_name, ob.funding_rounds, CONCAT(po.last_name, ' ', po.first_name) AS founders_name, re.title
+FROM objects ob
+JOIN relationships re
+ON ob.object_id = re.relationship_object_id
+JOIN people po
+ON re.person_object_id = po.object_id
+WHERE re.title LIKE '%Founder%'
 ORDER BY ob.funding_rounds DESC;
