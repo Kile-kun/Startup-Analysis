@@ -18,7 +18,9 @@ The project entails analyzing Historic startup data detailed and segmented into 
 __Preliminary Data Quality Checks__ - Otherwise called data eyeballing, Excel was employed with the sole purpose of giving the first look to have an idea of what we are working on, renaming column titles to establish uniformity, and removing the columns that are not so needed.
 
 __Database Creation__ – A startup database was created using MSSMS. The query used was;
+
 DROP DATABASE IF EXISTS startup_db;
+
 CREATE DATABASE startup_db;
 
 __Data Uploads__- Due to the nature and enormous size of the data files the import ‘Flat file’ method was used to upload the CSV formatted files into the database. The data files uploaded are used to create tables in the process, data types are assigned to each column and primary keys are assigned to the deserving column of each table. The data files/tables are explained below;
