@@ -70,7 +70,7 @@ GROUP BY( (CASE
 	END))
 ORDER BY degree_type;
 
-/*2a. FOUNDER WITH THE MOST FUNDING ROUND*/
+/*2a. FOUNDERS WITH THE MOST FUNDING ROUND (WRONG SOLUTION)*/
 
 SELECT CONCAT(po.last_name, ' ', po.first_name) AS full_name, de.institution, re.title, ob.name, ob.funding_rounds
 FROM people po
@@ -80,7 +80,20 @@ INNER JOIN relationships re
 ON de.object_id = re.person_object_id
 INNER JOIN objects ob
 ON re.relationship_object_id = ob.object_id
+WHERE re.title LIKE('Founder%')
 ORDER BY ob.funding_rounds DESC;
+
+/*2a. HIGHEST RANKING PERSONNELS WITH THE MOST FUNDING ROUND
+
+SELECT CONCAT(po.last_name, ' ', po.first_name) AS full_name, de.institution, re.title, ob.name, ob.funding_rounds
+FROM people po
+INNER JOIN degrees de
+ON po.object_id = de.object_id
+INNER JOIN relationships re
+ON de.object_id = re.person_object_id
+INNER JOIN objects ob
+ON re.relationship_object_id = ob.object_id
+ORDER BY ob.funding_rounds DESC;*/
 
 /*2bi. NUMBER OF FOUNDERS THAT GRADUATED FROM UNIVERSITY OF NEW SOUTH WALES */
 SELECT de.institution, 
@@ -91,7 +104,16 @@ ON de.object_id = re.person_object_id
 WHERE re.title LIKE 'Founder%' AND de.institution = 'University of New South Wales'
 GROUP BY de.institution;
 
-/*2b. NUMBER OF FOUNDERS THAT GRADUATED FROM UNIVERSITY OF NEW SOUTH WALES WITH IPOS */
+/*2bi. NUMBER OF STARTUPS HIGHEST RANKING PERSONNEL THAT GRADUATED FROM UNIVERSITY OF MICHIGAN
+SELECT de.institution, 
+COUNT(de.institution) AS no_of_alumni_founders
+FROM degrees de
+JOIN relationships re
+ON de.object_id = re.person_object_id
+WHERE de.institution = 'University of Michigan'
+GROUP BY de.institution;*/
+
+/*2bii. NUMBER OF FOUNDERS THAT GRADUATED FROM UNIVERSITY OF NEW SOUTH WALES WITH IPOS */
 SELECT de.institution, 
 COUNT(de.institution) AS no_of_alumni_founders
 FROM degrees de
@@ -101,6 +123,17 @@ JOIN ipos ip
 ON re.relationship_object_id = ip.object_id
 WHERE re.title LIKE 'Founder%' AND de.institution = 'University of New South Wales'
 GROUP BY de.institution;
+
+/*2bii. NUMBER OF STARTUPS HIGHEST RANKING PERSONNEL THAT GRADUATED FROM UNIVERSITY OF MICHIGAN WITH IPOS
+SELECT de.institution, 
+COUNT(de.institution) AS no_of_alumni_founders
+FROM degrees de
+JOIN relationships re
+ON de.object_id = re.person_object_id
+JOIN ipos ip
+ON re.relationship_object_id = ip.object_id
+WHERE de.institution = 'University of Michigan'
+GROUP BY de.institution;*/
 
 
 /*3a. COUNTRIES WITH THE MOST STARTUPS */
