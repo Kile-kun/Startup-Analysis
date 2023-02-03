@@ -68,8 +68,8 @@ ORDER BY funding_round_type;
 /*VII. TOP COMPANIES WITH SUCCESSFUL PUBLIC OFFERING (IPO)*/
 
 SELECT ob.name AS company_name, 
-	ip.raised_amount, 
-	ip.valuation_amount
+		ip.raised_amount, 
+		ip.valuation_amount
 FROM [dbo].[objects] ob
 JOIN [dbo].[ipos] ip
 ON ob.object_id = ip.object_id
@@ -84,7 +84,7 @@ SELECT ob.category_code,
 	SUM(ob.funding_total_usd)/NULLIF(COUNT(ob.category_code),0) AS funding_per_startup
 FROM [dbo].[objects] ob
 GROUP BY ob.category_code
-ORDER BY total_funds_recieved DESC;
+ORDER BY no_of_startups DESC;
 
 /*IX.	TOP INNOVATIVE COUNTRIES (NUMBER OF STARTUPS) AND INNOVATION INVESTMENT DESTINATIONS*/
 SELECT co.name  AS country, COUNT(co.name) AS no_of_startups, 
@@ -157,6 +157,40 @@ GROUP BY((CASE
 	END))
 ORDER BY degree_type;
 
+USE startup_db;
+/*XI.	TOP INNOVATIVE AFRICAN COUNTRIES*/
+SELECT co.name  AS country, COUNT(co.name) AS no_of_startups, 
+SUM(ob.funding_total_usd) AS total_fund_recieved
+FROM [dbo].[countries] co
+JOIN
+[dbo].[objects] ob
+ON co.country_code = ob.country_code
+WHERE ob.entity_type = 'Company' AND co.Region = 'Africa'
+GROUP BY co.name
+ORDER BY no_of_startups DESC;
+
+/*XII. AFRICAN COMPANIES WITH SUCCESSFUL PUBLIC OFFERING (IPO)*/
+
+SELECT ob.name AS company_name, 
+		ip.raised_amount, 
+		ip.valuation_amount
+FROM [dbo].[ipos] ip
+JOIN [dbo].[objects] ob
+ON  ip.object_id = ob.object_id
+JOIN [dbo].[countries] co
+ON ob.country_code = co.country_code
+WHERE raised_amount > 0 AND co.region = 'Africa'
+ORDER BY raised_amount DESC;
+
+/*XIII. TOP FOUNDERS PRODUCING UNIVERSITIES */
+SELECT TOP 10 de.institution, 
+COUNT(de.institution) AS no_of_alumni_founders
+FROM degrees de
+JOIN relationships re
+ON de.object_id = re.person_object_id
+WHERE re.title LIKE 'Founder%'
+GROUP BY de.institution
+ORDER BY no_of_alumni_founders DESC;
 
 
 
